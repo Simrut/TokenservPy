@@ -1,0 +1,18 @@
+[Distribution]
+Distribution=debian
+Release=buster
+
+[Output]
+Format=raw_gpt
+Bootable=yes
+Output=example.raw
+
+[Packages]
+Packages=iproute2 nano
+WithNetwork=yes
+
+[Partitions]
+RootSize=2G
+
+[Validation]
+Password=foobar

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+rm /etc/securetty
+apt install python3
+apt install python3-pip
+
+pip3 install python_jwt
+
+chmod +x opt/token_server.py
+#export PATH=opt/token_server.py:$PATH
+
+systemctl enable systemd-networkd
+systemctl enable simpleserver.service
+

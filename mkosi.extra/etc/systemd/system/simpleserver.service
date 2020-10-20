@@ -1,0 +1,16 @@
+[Unit]
+Description=Simple HTTP Server in Go
+After=network.target
+
+[Service]
+WorkingDirectory=/opt
+Type=simple
+ExecStart=/opt/token_server.py
+Restart=always
+RestartSec=10
+User=root
+Group=nogroup
+
+[Install]
+WantedBy=multi-user.target
+
