@@ -27,7 +27,7 @@ class MyHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes(token, encoding='utf8'))
         
 
-httpd = HTTPServer(('localhost', 8443), MyHandler)
+httpd = HTTPServer(('0.0.0.0', 8443), MyHandler)
 httpd.socket = ssl.wrap_socket(httpd.socket, certfile='cert_key.pem', server_side=True)
 
 httpd.serve_forever()
