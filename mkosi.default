@@ -5,7 +5,7 @@ Release=buster
 [Output]
 Format=raw_gpt
 Bootable=yes
-Output=example.raw
+Output=tokenserv_uagent.raw
 
 [Packages]
 Packages=iproute2 nano
