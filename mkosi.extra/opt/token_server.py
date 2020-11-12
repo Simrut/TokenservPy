@@ -2,6 +2,7 @@
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import ssl, datetime, python_jwt as jwt, jwcrypto.jwk as jwk
+from cgi import parse_header
 
 def write_key():
     f = open('key.pem', 'w')
@@ -17,8 +18,10 @@ def create_jwt():
 
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/':
-
+        uagent, pdict = parse_header(self.headers['user-agent'])
+        print(uagent)
+        if self.path == '/' and 'Dalvik' in uagent:
+            
             token = create_jwt()
             response = token.encode('utf-8')
 
@@ -29,7 +32,7 @@ class MyHandler(BaseHTTPRequestHandler):
             self.wfile.write(response)
         
 
-httpd = HTTPServer(('0.0.0.0', 8443), MyHandler)
+httpd = HTTPServer(('127.0.0.1', 8443), MyHandler)
 httpd.socket = ssl.wrap_socket(httpd.socket, certfile='cert_key.pem', server_side=True)
 
 httpd.serve_forever()
