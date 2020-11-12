@@ -1,0 +1,55 @@
+diff --git a/mkosi.extra/etc/resolv.conf b/mkosi.extra/etc/resolv.conf
+new file mode 120000
+index 0000000..3639662
+--- /dev/null
++++ b/mkosi.extra/etc/resolv.conf
+@@ -0,0 +1 @@
++/run/systemd/resolve/stub-resolv.conf
+\ No newline at end of file
+diff --git a/mkosi.extra/opt/token_server.py b/mkosi.extra/opt/token_server.py
+index 736d025..35ff3f2 100755
+--- a/mkosi.extra/opt/token_server.py
++++ b/mkosi.extra/opt/token_server.py
+@@ -20,14 +20,16 @@ class MyHandler(BaseHTTPRequestHandler):
+         if self.path == '/':
+ 
+             token = create_jwt()
++            response = token.encode('utf-8')
+ 
+             self.send_response(200)
+-            self.send_header('Content-type',  'text/html')
++            self.send_header('Content-Type',  'text/html; charset=utf-8')
++            self.send_header('Content-Length',  str(len(response)))
+             self.end_headers()
+-            self.wfile.write(bytes(token, encoding='utf8'))
+-        
++            self.wfile.write(response)
++
+ 
+ httpd = HTTPServer(('localhost', 8443), MyHandler)
+ httpd.socket = ssl.wrap_socket(httpd.socket, certfile='cert_key.pem', server_side=True)
+ 
+-httpd.serve_forever()
+\ No newline at end of file
++httpd.serve_forever()
+diff --git a/mkosi.postinst b/mkosi.postinst
+index c998ece..ab1cbcf 100755
+--- a/mkosi.postinst
++++ b/mkosi.postinst
+@@ -1,8 +1,7 @@
+ #!/bin/sh
+ 
+ rm /etc/securetty
+-apt install python3
+-apt install python3-pip
++apt install --yes python3 python3-pip
+ 
+ pip3 install python_jwt
+ 
+@@ -10,5 +9,6 @@ chmod +x opt/token_server.py
+ #export PATH=opt/token_server.py:$PATH
+ 
+ systemctl enable systemd-networkd
++systemctl enable systemd-resolved
+ systemctl enable simpleserver.service
+ 
